@@ -5,6 +5,7 @@ date: 2024-10-22T20:21:00-03:00
 marp: true
 autoscale: true
 paginate: true
+class: invert
 ---
 
 # Hello Mundo!
@@ -133,7 +134,6 @@ CSS (Cascading Style Sheets) é a linguagem usada para definir o estilo visual e
 - Proposto por: Håkon Wium Lie em 1994.
 - Separar o conteúdo (HTML) da apresentação (estilo), permitindo que os desenvolvedores mantenham melhor o design de páginas web.
 - Cores, tamanhos, fontes e tudo que não é neessáriamente estruturado
-Versões importantes:
 - Utiliza localizadores como `#id`, `.classes` e `nomes` de elementos HTML.
 ---
 # Versões do CSS
