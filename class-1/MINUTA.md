@@ -124,3 +124,21 @@ Ficará mais ou menos assim:
 <h1>Agenda</h1>
 <p>Seja bem-vindo ao nosso app de agenda, onde podemos marcar uma tarefa a ser executada em uma data</p>
 ```
+
+Agora vamos adicionar um formulário para poder adicionar tarefas e as tarefas serão armazenadas no `localStorage` do navegador, um tipo de memória que podemos usar para dados nos nossos webapps, muito comun para armazenar preferências de usuário como idioma das páginas e se está no modo escuro.
+
+Primeiro nosso esqueleto de formulário, teremos dois campos, um para o título da tarefa e outro para a data e hora da tarefa, o primeiro será um input do tipo texto e o segundo um `datetime-local` nativo do navegador
+
+Teremos o botão de envio adicionado pelo type `submit`, mas podemos adicionar botões como limpar usando o button
+```html
+<form id="task-form">
+    <input name="task" type="text" placeholder="Tarefa">
+    <input name="date" type="datetime-local" placeholder="Data e hora">
+    <input type="submit" value="Adicionar">
+</form>
+```
+Por fim vamos adicionar uma `div` , uma caixa vazia para futuramente carregarmos as tarefas
+```html
+<div id="tasks-list"></div>
+```
+
