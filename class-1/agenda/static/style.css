@@ -59,3 +59,12 @@ div#tasks-list {
     align-content: center;
     align-items: center;
 }
+
+.delete {
+    color: white;
+    background-color: red;
+    border: 1px solid #000;
+    border-right: 5px solid #000;
+    border-bottom: 5px solid #000;
+    padding: 10px;
+}

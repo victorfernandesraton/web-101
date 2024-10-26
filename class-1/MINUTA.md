@@ -229,7 +229,7 @@ O que vamos fazer agora é ler os dados do formulário ao ser apertado o botão 
 
 No arquivo [static/script.js](./static/script.js) vamos adicionar o seguinte:
 
-```js
+```javascript
 
 function envioFormulario(event) {
     event.preventDefault();
@@ -266,7 +266,7 @@ Dessa forma ao tentar enviar o formulário com campos vazios aparece um aviso e 
 Agora vamos fazer uma função que adiciona uma tarefa no `localStorage`, além disso, vamos gerar o ID aleatório para cada tarefa.
 
 nosso script ficará mais ou menos assim:
-```js
+```javascript
 
 function envioFormulario(event) {
     event.preventDefault();
@@ -293,7 +293,7 @@ Ao inspencionar no navegador nas ferramentas de desenvolvedor, na Aba Applicatio
 
 Estamos quase lá, agora falta carregar os itens criados toda vez que abrimos a página ou submetermos o valor, vamos agora adicionar a função que renderiza tarefas, bem como que deleta tarefas, assim ccomo vamos usar tanbém um `eventListerner` para carregar as tarefas na página
 
-```js
+```javascript
 
 function envioFormulario(event) {
     event.preventDefault();
@@ -322,12 +322,17 @@ function renderTarefas() {
 
     for (const id of ids) {
         const tarefa = JSON.parse(localStorage.getItem(id));
+        const textoData = new Intl.DateTimeFormat('pt-BR', {
+            dateStyle: 'full',
+            timeStyle: 'long',
+            timeZone: 'America/Bahia',
+          }).format(new Date(tarefa.date));
         tarefas.innerHTML += `
         <div class="task-item">
             <div class="content">
-                <p>${tarefa.id}</p>
+                <strong>#${tarefa.id}</strong>
                 <p>${tarefa.task}</p>
-                <p>${tarefa.date}</p>
+                <p>${textoData}</p>
 
             </div>
             <div class="actions">
@@ -344,3 +349,36 @@ function deletarTarefa(id) {
 }
 
 window.addEventListener('load', renderTarefas);
+```
+
+Nesse script tanbém usamos o módulo de internacionalização `Intl.DateTimeFormat` para formatar a data e hora com base no fuso horário da Bahia (meu estado)
+
+Por fim vamos adicionar alguns estilos e voualá
+
+```css
+.task-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 10px;
+}
+
+.actions {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: center;
+}
+
+.delete {
+    color: white;
+    background-color: red;
+    border: 1px solid #000;
+    border-right: 5px solid #000;
+    border-bottom: 5px solid #000;
+    padding: 10px;
+}
+
+```
