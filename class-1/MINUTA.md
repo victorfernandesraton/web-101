@@ -142,3 +142,205 @@ Por fim vamos adicionar uma `div` , uma caixa vazia para futuramente carregarmos
 <div id="tasks-list"></div>
 ```
 
+É muito importante lembrar de adicionar o `id` nos elementos de forma que sejam únicos, para podermos no futuro identificar e interagir com elementos em nossa página.
+
+
+#### Hora da armonização facial
+
+Vamos estilizar um pouco , pois nosso formulário está bem feio, vamos centralizar o nosso conteúdo em uma caixa para ficar mais amigavél ao mobile, além disso vamos fazer os inputs um em baixo do outro
+
+Vamos criar um arquivo `style.css` para estilizar o nosso projeto inteiro, e carregar este no arquivo `index.html`
+
+Neste arquivo de estilo vamos começar definindo propriedades pro body para centralizar as coisas:
+
+```css
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+```
+Agora vamos carregar os estilos ajustando a url do link, modificando o link para:
+
+```html
+<link href="static/style.css" rel="stylesheet">
+```
+Ao salvar o arquivo e recarregar a página home, você verá as coisas centralizadas agora.
+
+
+Por fim vamos estilizar o nosso formulário, reeditando todo o arquivo +- assim:
+```CSS
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#task-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 90%;
+    width: 400px;
+    gap: 10px;
+
+}
+
+input {
+    width: 100%;
+    border: 1px solid #000;
+    border-right: 5px solid #000;
+    border-bottom: 5px solid #000;
+    padding: 10px;
+
+
+}
+
+input[type="submit"] {
+    color: white;
+    background-color: blue;
+}
+
+div#tasks-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 90%;
+    width: 400px;
+    gap: 10px;
+    border: 1px solid #000;
+    border-right: 5px solid #000;
+    border-bottom: 5px solid #000;
+    min-height: 200px;
+}
+```
+- Representamos cores nornmalmente com valores hexadecimais como `#000`, ou com nomes como `blue` e `white`.
+- Podemos combinar seletores, como no caso do botão `input[type="submit"]`, que vai ter a cor branca e o fundo azul, pois alteramos o estilo apenas para inputs do tipo submit
+- Podemos usar seletores combinando componente + id como no caso do `div#tasks-list`, que fizermos ser uma caixa branca vazia
+
+
+#### Fazendo funcionar
+
+Vamos criar um arquivo `script.js` para fazer o nosso app funcionar, nele adicionaremos funcionalidades javascript.
+
+Nessa etapa usaremos bastante JSON (JavaScript Object Notation) para criar o nosso `localStorage` e `tasks` para armazenar as tarefas e a data de cada tarefa.
+
+O que vamos fazer agora é ler os dados do formulário ao ser apertado o botão de envio, e adicionar uma nova tarefa na lista de tarefas.
+
+No arquivo [static/script.js](./static/script.js) vamos adicionar o seguinte:
+
+```js
+
+function envioFormulario(event) {
+    event.preventDefault();
+
+    const task = document.querySelector('input[name="task"]').value;
+    const date = document.querySelector('input[name="date"]').value;
+    const tarefaItem = {task, date};
+    console.log(tarefaItem);
+}
+```
+
+Isto é apenas uma função javascript que:
+- Recebe um evento de formulaário como argumento
+- Cancela esse evento
+- Pega o valor do input de tarefa e da data usando a propriedade nome
+- Cria um objeto com esses valores
+- Imprime esse objeto no console
+
+O mais importante é o uso do `querySelector` para selecionar o input de tarefa e o `value` para obter o valor do input.
+
+Uma forma alternativa seria pegar apenas o form e seus valores usando o `event.target` e `event.target.value`
+
+> **Dica**: Ao trabalhar no navegador podemos usar ferramentas que este mesmo disponibiliza, podemos clicar no menu do navegador -> Mais Ferramentas -> Ferramentas de desenvolvimento, ou em navegadores como chrome, firefox , edge, opera e afins usar o atalho `Ctrl+Shift+i`
+
+Ao inspesionar o navegador ao enviar o formulário com dados aparecerá no console os dados em json da tarefa com o título e a data, para evitar erros, adicionaremos a propriedade required=true em ambos os campos para evitar envio de dados vazios.
+
+```html
+<input name="task" type="text" placeholder="Tarefa" required>
+<input name="date" type="datetime-local" placeholder="Data e hora" required>
+```
+
+Dessa forma ao tentar enviar o formulário com campos vazios aparece um aviso e impede o envio
+
+Agora vamos fazer uma função que adiciona uma tarefa no `localStorage`, além disso, vamos gerar o ID aleatório para cada tarefa.
+
+nosso script ficará mais ou menos assim:
+```js
+
+function envioFormulario(event) {
+    event.preventDefault();
+
+    const form = document.querySelector('form');
+    const task = document.querySelector('input[name="task"]').value;
+    const date = document.querySelector('input[name="date"]').value;
+    const tarefaItem = {task, date};
+
+    console.log(tarefaItem);
+    adicionarTarefa(tarefaItem);
+    form.reset();
+}
+
+function adicionarTarefa(tarefaItem) {
+    const id = new Date().getTime();
+    const tarefa = {id, ...tarefaItem};
+    localStorage.setItem(id, JSON.stringify(tarefa));
+}
+
+```
+
+Ao inspencionar no navegador nas ferramentas de desenvolvedor, na Aba Applications, no Local Storage, teremos as tarefas que foram adicionadas
+
+Estamos quase lá, agora falta carregar os itens criados toda vez que abrimos a página ou submetermos o valor, vamos agora adicionar a função que renderiza tarefas, bem como que deleta tarefas, assim ccomo vamos usar tanbém um `eventListerner` para carregar as tarefas na página
+
+```js
+
+function envioFormulario(event) {
+    event.preventDefault();
+
+    const form = document.querySelector('form');
+    const task = document.querySelector('input[name="task"]').value;
+    const date = document.querySelector('input[name="date"]').value;
+    const tarefaItem = {task, date};
+
+    console.log(tarefaItem);
+    adicionarTarefa(tarefaItem);
+    form.reset();
+    renderTarefas();
+}
+
+function adicionarTarefa(tarefaItem) {
+    const id = new Date().getTime();
+    const tarefa = {id, ...tarefaItem};
+    localStorage.setItem(id, JSON.stringify(tarefa));
+}
+
+function renderTarefas() {
+    const tarefas = document.querySelector('#tasks-list');
+    tarefas.innerHTML = '';
+    const ids = Object.keys(localStorage);
+
+    for (const id of ids) {
+        const tarefa = JSON.parse(localStorage.getItem(id));
+        tarefas.innerHTML += `
+        <div class="task-item">
+            <div class="content">
+                <p>${tarefa.id}</p>
+                <p>${tarefa.task}</p>
+                <p>${tarefa.date}</p>
+
+            </div>
+            <div class="actions">
+                <button onclick="deletarTarefa(${tarefa.id})" class="delete">Deletar</button>
+            </div>
+        </div>
+        `;
+    }
+}
+
+function deletarTarefa(id) {
+    localStorage.removeItem(id);
+    renderTarefas();
+}
+
+window.addEventListener('load', renderTarefas);

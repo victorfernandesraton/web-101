@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Agenda</title>
+    <link href="static/style.css" rel="stylesheet">
+    <script src="static/script.js"></script>
 </head>
 
 <body>
@@ -12,13 +14,15 @@
     <h1>Agenda</h1>
     <p>Seja bem-vindo ao nosso app de agenda, onde podemos marcar uma tarefa a ser executada em uma data</p>
 
-    <form id="task-form">
-        <input name="task" type="text" placeholder="Tarefa">
-        <input name="date" type="datetime-local" placeholder="Data e hora">
+    <form id="task-form" onsubmit="envioFormulario(event)">
+        <input name="task" type="text" placeholder="Tarefa" required>
+        <input name="date" type="datetime-local" placeholder="Data e hora" required>
         <input type="submit" value="Adicionar">
     </form>
 
-    <div id="tasks-list"></div>
+    <div id="tasks-list">
+
+    </div>
 </body>
 
 </html>
