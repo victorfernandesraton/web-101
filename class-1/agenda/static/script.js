@@ -25,11 +25,7 @@ function renderTarefas() {
 
     for (const id of ids) {
         const tarefa = JSON.parse(localStorage.getItem(id));
-        const textoData = new Intl.DateTimeFormat('pt-BR', {
-            dateStyle: 'full',
-            timeStyle: 'long',
-            timeZone: 'America/Bahia',
-          }).format(new Date(tarefa.date));
+        const textoData = formatarData(tarefa.date);
         tarefas.innerHTML += `
         <div class="task-item">
             <div class="content">
@@ -49,6 +45,14 @@ function renderTarefas() {
 function deletarTarefa(id) {
     localStorage.removeItem(id);
     renderTarefas();
+}
+
+function formatarData(data) {
+    return new Intl.DateTimeFormat('pt-BR', {
+        dateStyle: 'full',
+        timeStyle: 'long',
+        timeZone: 'America/Bahia',
+        }).format(new Date(data));
 }
 
 window.addEventListener('load', renderTarefas);
